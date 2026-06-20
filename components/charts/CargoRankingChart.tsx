@@ -4,7 +4,13 @@ import * as React from "react";
 import { Bar } from "react-chartjs-2";
 import { useTheme } from "next-themes";
 
-import { getChartTheme, registerChartDefaults } from "./chart-defaults";
+import {
+  getChartTheme,
+  horizontalBarGradient,
+  premiumAnimation,
+  premiumTransitions,
+  registerChartDefaults,
+} from "./chart-defaults";
 import type { RankingCargo } from "@/lib/calc/absenteismo";
 
 registerChartDefaults();
@@ -38,8 +44,22 @@ export function CargoRankingChart({ data, top = 8 }: CargoRankingChartProps) {
           {
             label: "Dias perdidos",
             data: values,
-            backgroundColor: theme.accent,
-            borderRadius: 4,
+            backgroundColor: (ctx) =>
+              horizontalBarGradient(
+                ctx.chart.ctx,
+                ctx.chart.chartArea,
+                theme.palette[3], // emerald-500
+                theme.palette[2] // indigo-500
+              ),
+            hoverBackgroundColor: (ctx) =>
+              horizontalBarGradient(
+                ctx.chart.ctx,
+                ctx.chart.chartArea,
+                theme.palette[7], // cyan-500
+                theme.palette[2]
+              ),
+            borderRadius: 6,
+            borderSkipped: false,
             barThickness: 16,
           },
         ],
@@ -48,9 +68,13 @@ export function CargoRankingChart({ data, top = 8 }: CargoRankingChartProps) {
         indexAxis: "y",
         maintainAspectRatio: false,
         responsive: true,
+        animation: premiumAnimation<"bar">(),
+        transitions: premiumTransitions<"bar">(),
         plugins: {
           legend: { display: false },
           tooltip: {
+            padding: 10,
+            cornerRadius: 6,
             callbacks: {
               label: (ctx) => {
                 const v = ctx.parsed.x ?? 0;

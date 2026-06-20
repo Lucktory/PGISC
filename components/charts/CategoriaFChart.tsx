@@ -4,7 +4,13 @@ import * as React from "react";
 import { Bar } from "react-chartjs-2";
 import { useTheme } from "next-themes";
 
-import { getChartTheme, registerChartDefaults } from "./chart-defaults";
+import {
+  getChartTheme,
+  horizontalBarGradient,
+  premiumAnimation,
+  premiumTransitions,
+  registerChartDefaults,
+} from "./chart-defaults";
 
 registerChartDefaults();
 
@@ -27,8 +33,22 @@ export function CategoriaFChart({ data }: CategoriaFChartProps) {
           {
             label: "Casos",
             data: values,
-            backgroundColor: theme.accent,
-            borderRadius: 4,
+            backgroundColor: (ctx) =>
+              horizontalBarGradient(
+                ctx.chart.ctx,
+                ctx.chart.chartArea,
+                theme.palette[6], // purple-500
+                theme.palette[2] // indigo-500
+              ),
+            hoverBackgroundColor: (ctx) =>
+              horizontalBarGradient(
+                ctx.chart.ctx,
+                ctx.chart.chartArea,
+                theme.palette[5], // rose
+                theme.palette[2]
+              ),
+            borderRadius: 5,
+            borderSkipped: false,
             barThickness: 14,
           },
         ],
@@ -37,9 +57,13 @@ export function CategoriaFChart({ data }: CategoriaFChartProps) {
         indexAxis: "y",
         maintainAspectRatio: false,
         responsive: true,
+        animation: premiumAnimation<"bar">(),
+        transitions: premiumTransitions<"bar">(),
         plugins: {
           legend: { display: false },
           tooltip: {
+            padding: 10,
+            cornerRadius: 6,
             callbacks: {
               label: (ctx) => ` ${ctx.parsed.x ?? 0} casos`,
             },

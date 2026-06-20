@@ -4,7 +4,13 @@ import * as React from "react";
 import { Bar } from "react-chartjs-2";
 import { useTheme } from "next-themes";
 
-import { getChartTheme, registerChartDefaults } from "./chart-defaults";
+import {
+  getChartTheme,
+  horizontalBarGradient,
+  premiumAnimation,
+  premiumTransitions,
+  registerChartDefaults,
+} from "./chart-defaults";
 import type { SetorDias } from "@/lib/calc/executivo";
 
 registerChartDefaults();
@@ -38,9 +44,23 @@ export function SetorRankingChart({ data, top = 8 }: SetorRankingChartProps) {
           {
             label: "Dias perdidos",
             data: values,
-            backgroundColor: theme.primary,
-            borderRadius: 4,
-            barThickness: 16,
+            backgroundColor: (ctx) =>
+              horizontalBarGradient(
+                ctx.chart.ctx,
+                ctx.chart.chartArea,
+                theme.palette[1], // sky-500 (lighter end)
+                theme.palette[0] // teal-500 (saturated end)
+              ),
+            hoverBackgroundColor: (ctx) =>
+              horizontalBarGradient(
+                ctx.chart.ctx,
+                ctx.chart.chartArea,
+                theme.palette[2], // indigo-500 on hover for delight
+                theme.palette[0]
+              ),
+            borderRadius: 6,
+            borderSkipped: false,
+            barThickness: 18,
           },
         ],
       }}
@@ -48,17 +68,21 @@ export function SetorRankingChart({ data, top = 8 }: SetorRankingChartProps) {
         indexAxis: "y",
         maintainAspectRatio: false,
         responsive: true,
+        animation: premiumAnimation<"bar">(),
+        transitions: premiumTransitions<"bar">(),
         plugins: {
           legend: { display: false },
           tooltip: {
             backgroundColor: theme.text,
             titleColor: theme.text,
             bodyColor: theme.text,
+            padding: 10,
+            cornerRadius: 6,
             callbacks: {
               label: (ctx) => {
-              const v = ctx.parsed.x ?? 0;
-              return ` ${v.toFixed(1).replace(".", ",")} dias`;
-            },
+                const v = ctx.parsed.x ?? 0;
+                return ` ${v.toFixed(1).replace(".", ",")} dias`;
+              },
             },
           },
         },

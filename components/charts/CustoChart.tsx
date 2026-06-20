@@ -5,7 +5,13 @@ import { Bar } from "react-chartjs-2";
 import { useTheme } from "next-themes";
 
 import { formatBRLCompact } from "@/lib/format/currency";
-import { getChartTheme, registerChartDefaults } from "./chart-defaults";
+import {
+  getChartTheme,
+  horizontalBarGradient,
+  premiumAnimation,
+  premiumTransitions,
+  registerChartDefaults,
+} from "./chart-defaults";
 
 registerChartDefaults();
 
@@ -30,6 +36,12 @@ export function CustoChart({
   const mobile = typeof window !== "undefined" && window.innerWidth < 768;
   const shortLabels = labels.map((l) => (mobile ? truncate(l, 12) : l));
 
+  // Custo: amber-led gradient (money / value). Variant toggles between two combos.
+  const gradientStart = variant === "accent" ? theme.palette[4] : theme.palette[2]; // amber or indigo
+  const gradientEnd = variant === "accent" ? theme.palette[5] : theme.palette[4]; // rose or amber
+  const hoverStart = variant === "accent" ? theme.palette[2] : theme.palette[5];
+  const hoverEnd = variant === "accent" ? theme.palette[5] : theme.palette[4];
+
   return (
     <Bar
       data={{
@@ -38,9 +50,23 @@ export function CustoChart({
           {
             label: "Custo",
             data: values,
-            backgroundColor: variant === "accent" ? theme.accent : theme.primary,
-            borderRadius: 4,
-            barThickness: 16,
+            backgroundColor: (ctx) =>
+              horizontalBarGradient(
+                ctx.chart.ctx,
+                ctx.chart.chartArea,
+                gradientStart,
+                gradientEnd
+              ),
+            hoverBackgroundColor: (ctx) =>
+              horizontalBarGradient(
+                ctx.chart.ctx,
+                ctx.chart.chartArea,
+                hoverStart,
+                hoverEnd
+              ),
+            borderRadius: 6,
+            borderSkipped: false,
+            barThickness: 18,
           },
         ],
       }}
@@ -48,9 +74,13 @@ export function CustoChart({
         indexAxis: "y",
         maintainAspectRatio: false,
         responsive: true,
+        animation: premiumAnimation<"bar">(),
+        transitions: premiumTransitions<"bar">(),
         plugins: {
           legend: { display: false },
           tooltip: {
+            padding: 10,
+            cornerRadius: 6,
             callbacks: {
               label: (ctx) => ` ${formatBRLCompact(Number(ctx.parsed.x ?? 0))}`,
             },
