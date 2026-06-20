@@ -7,24 +7,47 @@ import { useTheme } from "next-themes";
 
 import { getChartTheme } from "./chart-defaults";
 
-// The fan-in animation patches the global pie.prototype.animate. We only
-// install it once per page load, guarded by `patched`.
+// ---------------------------------------------------------------------------
+// Patch H.seriesTypes.pie.prototype.animate at MODULE LOAD (matching the
+// original Highcharts example which uses an IIFE).
+//
+// Why not useEffect? The chart constructor runs synchronously during render
+// and calls animate(true) then animate(false) on the series. A useEffect
+// hook would only fire AFTER that render is committed, so the patch would
+// be installed too late and the first chart would use the default Highcharts
+// animation instead of the fan-in.
+//
+// Running the patch at module load guarantees the prototype is patched
+// before HighchartsReact ever instantiates a chart.
+//
+// SSR safety: skipped on the server via typeof window check. The component
+// itself also renders a placeholder until `mounted` to avoid hydration
+// mismatch from Highcharts' SVG output.
+// ---------------------------------------------------------------------------
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyHighcharts = typeof Highcharts & { seriesTypes?: any };
+
 let patched = false;
-function patchFanAnimation() {
-  if (patched || typeof window === "undefined") return;
+function installFanAnimationPatch(): void {
+  if (patched) return;
+  if (typeof window === "undefined") return;
+  const types = (Highcharts as AnyHighcharts).seriesTypes;
+  if (!types?.pie?.prototype) return;
   patched = true;
 
-  // Highcharts exposes seriesTypes at runtime but the TS types do not include it.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const seriesTypes = (Highcharts as any).seriesTypes;
-  if (!seriesTypes?.pie?.prototype) return;
-  seriesTypes.pie.prototype.animate = function (init?: boolean) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const series = this as any;
+  types.pie.prototype.animate = function (this: any, init?: boolean) {
+    const series = this;
     const chart = series.chart;
     const points = series.points;
-    const { animation } = series.options;
-    const { startAngleRad } = series;
+    const animation = series.options.animation;
+    const startAngleRad = series.startAngleRad;
+
+    // The post-animation chart.update fires series.render which may call
+    // animate again. This guard makes sure the fan animation only plays
+    // once per chart instance. Reset on a fresh chart (new series object).
+    if (series._fanCompleted) return;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function fanAnimate(point: any, startAngle: number) {
@@ -33,35 +56,33 @@ function patchFanAnimation() {
       if (!graphic || !args) return;
 
       graphic
-        .attr({
-          start: startAngle,
-          end: startAngle,
-          opacity: 1,
-        })
+        .attr({ start: startAngle, end: startAngle, opacity: 1 })
         .animate(
           { start: args.start, end: args.end },
           { duration: animation.duration / points.length },
           function () {
             if (points[point.index + 1]) {
               fanAnimate(points[point.index + 1], args.end);
+              return;
             }
-            if (point.index === points.length - 1) {
-              series.dataLabelsGroup.animate(
-                { opacity: 1 },
-                undefined,
-                function () {
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  points.forEach((p: any) => {
-                    p.opacity = 1;
-                  });
-                  series.update({ enableMouseTracking: true }, false);
-                  chart.update({
-                    plotOptions: {
-                      pie: { innerSize: "55%", borderRadius: 8 },
-                    },
-                  });
-                }
-              );
+            // Last point finished: fade in labels, then morph pie -> donut.
+            series._fanCompleted = true;
+            const finish = () => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              points.forEach((p: any) => {
+                p.opacity = 1;
+              });
+              series.update({ enableMouseTracking: true }, false);
+              chart.update({
+                plotOptions: {
+                  pie: { innerSize: "55%", borderRadius: 8 },
+                },
+              });
+            };
+            if (series.dataLabelsGroup) {
+              series.dataLabelsGroup.animate({ opacity: 1 }, undefined, finish);
+            } else {
+              finish();
             }
           }
         );
@@ -72,11 +93,17 @@ function patchFanAnimation() {
       points.forEach((p: any) => {
         p.opacity = 0;
       });
-    } else {
+    } else if (points.length > 0) {
       fanAnimate(points[0], startAngleRad);
     }
   };
 }
+
+// Run synchronously at module load. The "use client" directive ensures this
+// module is only loaded in the browser bundle.
+installFanAnimationPatch();
+
+// ---------------------------------------------------------------------------
 
 export interface HighchartsDonutProps {
   data: Array<{ name: string; y: number }>;
@@ -95,28 +122,30 @@ export function HighchartsDonut({
   durationMs = 1100,
 }: HighchartsDonutProps) {
   const { resolvedTheme } = useTheme();
-  const theme = React.useMemo(() => getChartTheme(), [resolvedTheme]);
+  const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
-    patchFanAnimation();
+    // Idempotent - the no-op branch trips if it ran at module load.
+    installFanAnimationPatch();
+    setMounted(true);
   }, []);
 
-  // Cohesive default: teal/sky/slate ramp from the locked palette. Override
-  // by passing `colors` if a specific category needs different hues.
-  const defaultColors = React.useMemo(
-    () => [
-      theme.palette[0], // teal
-      theme.palette[1], // sky
-      theme.palette[6], // slate-300
-      theme.palette[3], // teal-300
-      theme.palette[5], // sky-300
-      theme.palette[4], // slate-500 (fallback)
-    ],
-    [theme.palette]
+  const theme = React.useMemo(
+    () => (mounted ? getChartTheme() : null),
+    [mounted, resolvedTheme]
   );
 
-  const options: Highcharts.Options = React.useMemo(
-    () => ({
+  const options = React.useMemo<Highcharts.Options | null>(() => {
+    if (!theme) return null;
+    const defaultColors = [
+      theme.palette[0],
+      theme.palette[1],
+      theme.palette[6],
+      theme.palette[3],
+      theme.palette[5],
+      theme.palette[4],
+    ];
+    return {
       chart: {
         type: "pie",
         backgroundColor: "transparent",
@@ -128,9 +157,7 @@ export function HighchartsDonut({
       },
       title: { text: undefined },
       credits: { enabled: false },
-      accessibility: {
-        point: { valueSuffix: "%" },
-      },
+      accessibility: { point: { valueSuffix: "%" } },
       colors: colors ?? defaultColors,
       tooltip: {
         headerFormat: "",
@@ -140,10 +167,7 @@ export function HighchartsDonut({
         backgroundColor: theme.cardBg,
         borderColor: theme.grid,
         borderRadius: 6,
-        style: {
-          color: theme.text,
-          fontSize: "12px",
-        },
+        style: { color: theme.text, fontSize: "12px" },
       },
       plotOptions: {
         pie: {
@@ -154,7 +178,7 @@ export function HighchartsDonut({
           dataLabels: {
             enabled: showDataLabels,
             format: "<b>{point.name}</b><br>{point.percentage:.1f}%",
-            distance: 15,
+            distance: 14,
             connectorWidth: 1,
             connectorColor: theme.grid,
             style: {
@@ -194,21 +218,21 @@ export function HighchartsDonut({
           },
         ],
       },
-    }),
-    [
-      colors,
-      defaultColors,
-      data,
-      durationMs,
-      showDataLabels,
-      theme.cardBg,
-      theme.grid,
-      theme.text,
-    ]
-  );
+    };
+  }, [theme, colors, data, durationMs, showDataLabels]);
+
+  // SSR + pre-hydration: render an empty same-sized box so layout doesn't
+  // jump when the chart mounts client-side. Avoids hydration mismatch from
+  // Highcharts' SVG output and any direct DOM measurement Highcharts does.
+  if (!mounted || !options) {
+    return <div className="h-full w-full" aria-hidden />;
+  }
 
   return (
     <HighchartsReact
+      // Forces a fresh chart instance on theme change so the fan-in animation
+      // replays with the new palette. The series object is new too, so the
+      // _fanCompleted flag resets.
       key={resolvedTheme}
       highcharts={Highcharts}
       options={options}
