@@ -291,9 +291,9 @@ export default function DashboardFinanceiroPage() {
         </ChartCard>
 
         <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <ListOrdered className="h-4 w-4 text-muted-foreground" />
-            <h2 className="text-base font-semibold">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <ListOrdered className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <h2 className="min-w-0 text-base font-semibold">
               Top 10 casos individuais mais custosos
             </h2>
             <Badge variant="muted" className="text-[10px]">
