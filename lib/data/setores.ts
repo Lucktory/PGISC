@@ -1,0 +1,16 @@
+export const setores: string[] = [
+  "Costura",
+  "Marcenaria",
+  "Embalagem",
+  "Administracao",
+  "Lixa",
+  "Tapecaria",
+  "Montagem",
+  "Preparacao",
+  "Acabamento",
+  "Estofamento",
+  "Almoxarifado",
+  "Expedicao",
+  "Qualidade",
+  "Manutencao",
+];
