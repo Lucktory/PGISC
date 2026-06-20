@@ -304,7 +304,7 @@ export default function DashboardAbsenteismoPage() {
         }
       />
 
-      <div className="flex flex-col gap-4 px-4 py-4 lg:gap-6 lg:px-8 lg:py-6">
+      <div className="flex flex-col gap-4 px-4 py-4 pb-24 lg:gap-6 lg:px-8 lg:py-6 lg:pb-6">
         <div className="flex items-center gap-2">
           <PhaseBadge phase={1} />
           <span className="text-[11px] text-muted-foreground">

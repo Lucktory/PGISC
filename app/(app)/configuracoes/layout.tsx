@@ -39,7 +39,7 @@ export default function ConfiguracoesLayout({
         subtitle="Template, empresas, usuarios, regras de negocio e mais"
         showFilters={false}
       />
-      <nav className="sticky top-0 z-10 border-b border-border bg-background">
+      <nav className="border-b border-border bg-background lg:sticky lg:top-0 lg:z-10">
         <div className="-mx-1 flex snap-x snap-mandatory gap-1 overflow-x-auto px-4 py-2 lg:px-8">
           {TABS.map((t) => {
             const active = pathname === t.href;
@@ -62,7 +62,7 @@ export default function ConfiguracoesLayout({
           })}
         </div>
       </nav>
-      <div className="px-4 py-4 lg:px-8 lg:py-6">{children}</div>
+      <div className="px-4 py-4 pb-12 lg:px-8 lg:py-6 lg:pb-6">{children}</div>
     </>
   );
 }

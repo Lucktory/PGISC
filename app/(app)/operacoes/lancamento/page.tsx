@@ -222,7 +222,7 @@ export default function LancamentoPage() {
           </Button>
         }
       />
-      <div className="flex flex-col gap-4 px-4 py-4 pb-28 lg:gap-6 lg:px-8 lg:py-6 lg:pb-6">
+      <div className="flex flex-col gap-4 px-4 py-4 pb-[calc(env(safe-area-inset-bottom)+9.5rem)] lg:gap-6 lg:px-8 lg:py-6 lg:pb-6">
         <DemoBanner message="Os lancamentos ficam salvos no seu navegador (localStorage) durante a demo. Em producao, gravam no banco PostgreSQL com sincronizacao em tempo real para os dashboards." />
 
         <Card className="p-4 lg:p-6">
@@ -629,7 +629,8 @@ export default function LancamentoPage() {
       {/* Mobile sticky submit bar */}
       <div
         className={cn(
-          "fixed bottom-0 left-0 right-0 z-30 border-t border-border bg-card px-4 pb-[calc(env(safe-area-inset-bottom)+62px)] pt-3 lg:hidden"
+          "fixed left-0 right-0 z-30 border-t border-border bg-card px-4 py-3 lg:hidden",
+          "bottom-[calc(env(safe-area-inset-bottom)+56px)]"
         )}
       >
         <Button

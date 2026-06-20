@@ -159,7 +159,7 @@ export default function ImportarPage() {
         subtitle="Carregue um lote de atendimentos do template oficial PGISC"
         showFilters={false}
       />
-      <div className="flex flex-col gap-4 px-4 py-4 pb-28 lg:gap-6 lg:px-8 lg:py-6 lg:pb-6">
+      <div className="flex flex-col gap-4 px-4 py-4 pb-[calc(env(safe-area-inset-bottom)+9.5rem)] lg:gap-6 lg:px-8 lg:py-6 lg:pb-6">
         <DemoBanner message="A importacao opera somente em memoria nesta demo. Em producao, o lote sera persistido no banco PostgreSQL com auditoria de origem." />
 
         <StepIndicator />
@@ -518,7 +518,7 @@ export default function ImportarPage() {
 
       {/* Step navigation - sticky bottom on mobile */}
       {step !== "done" && (
-        <div className="fixed bottom-0 left-0 right-0 z-30 flex items-center justify-between gap-2 border-t border-border bg-card px-4 pb-[calc(env(safe-area-inset-bottom)+62px)] pt-3 lg:static lg:border-0 lg:bg-transparent lg:px-8 lg:pb-6 lg:pt-0">
+        <div className="fixed left-0 right-0 z-30 flex items-center justify-between gap-2 border-t border-border bg-card px-4 py-3 bottom-[calc(env(safe-area-inset-bottom)+56px)] lg:static lg:border-0 lg:bg-transparent lg:px-8 lg:py-0 lg:bottom-auto">
           <Button
             type="button"
             variant="outline"

@@ -104,7 +104,7 @@ export default function DashboardEpidemiologicoPage() {
         title="Dashboard Epidemiologico"
         subtitle="Top CIDs, motivos, grupo CID, faixa etaria e sexo"
       />
-      <div className="flex flex-col gap-4 px-4 py-4 lg:gap-6 lg:px-8 lg:py-6">
+      <div className="flex flex-col gap-4 px-4 py-4 pb-12 lg:gap-6 lg:px-8 lg:py-6 lg:pb-6">
         <div className="flex items-center gap-2">
           <PhaseBadge phase={2} />
           <span className="text-[11px] text-muted-foreground">

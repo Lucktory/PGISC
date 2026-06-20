@@ -35,8 +35,12 @@ export function PeriodoSelector({
         )}
       >
         <Calendar className="h-4 w-4 text-muted-foreground" />
-        <span className="text-muted-foreground text-xs">Periodo:</span>
-        <span className="font-semibold">{atual.label}</span>
+        <span className="hidden text-muted-foreground text-xs xl:inline">
+          Periodo:
+        </span>
+        <span className="truncate font-semibold max-w-[140px]">
+          {atual.label}
+        </span>
         <ChevronDown className="h-3 w-3 text-muted-foreground" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-48">

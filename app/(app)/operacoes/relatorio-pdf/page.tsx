@@ -121,7 +121,7 @@ export default function RelatorioPdfPage() {
         title="Relatorio executivo PDF"
         subtitle="Geracao automatica do relatorio para diretoria"
       />
-      <div className="flex flex-col gap-4 px-4 py-4 lg:gap-6 lg:px-8 lg:py-6">
+      <div className="flex flex-col gap-4 px-4 py-4 pb-24 lg:gap-6 lg:px-8 lg:py-6 lg:pb-6">
         <DemoBanner message="O PDF e gerado em tempo real no navegador via jsPDF, usando exatamente os dados reais do PEREIRA Jan/2026 ja carregados." />
 
         <div className="grid gap-4 lg:grid-cols-[1fr_320px]">

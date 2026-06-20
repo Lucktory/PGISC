@@ -30,7 +30,7 @@ import { empresas } from "@/lib/data/empresas";
 import { PERIODOS_DISPONIVEIS } from "@/lib/constants";
 import { useFilterStore } from "@/lib/state/filter-store";
 import { useSettingsStore } from "@/lib/state/settings-store";
-import { formatBRL } from "@/lib/format/currency";
+import { formatBRL, formatBRLCompact } from "@/lib/format/currency";
 import { formatNumber1 } from "@/lib/format/number";
 
 function downloadCsv(filename: string, rows: Record<string, string | number>[]) {
@@ -185,7 +185,7 @@ export default function DashboardFinanceiroPage() {
           </Button>
         }
       />
-      <div className="flex flex-col gap-4 px-4 py-4 lg:gap-6 lg:px-8 lg:py-6">
+      <div className="flex flex-col gap-4 px-4 py-4 pb-24 lg:gap-6 lg:px-8 lg:py-6 lg:pb-6">
         <div className="flex items-center gap-2">
           <PhaseBadge phase={3} />
           <span className="text-[11px] text-muted-foreground">
@@ -200,7 +200,7 @@ export default function DashboardFinanceiroPage() {
             <CircleDollarSign className="h-4 w-4" />
             Custo total do absenteismo
           </div>
-          <div className="mt-2 text-3xl font-bold tracking-tight lg:text-4xl">
+          <div className="mt-2 break-all text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
             {formatBRL(dashboard.custoTotal)}
           </div>
           <div className="mt-1 text-xs text-muted-foreground">
@@ -212,7 +212,7 @@ export default function DashboardFinanceiroPage() {
           <KpiCard
             label="Custo por colaborador"
             icon={CircleDollarSign}
-            value={formatBRL(dashboard.custoPorColaborador)}
+            value={formatBRLCompact(dashboard.custoPorColaborador)}
             hint="Media no periodo"
           />
           <KpiCard
@@ -221,7 +221,7 @@ export default function DashboardFinanceiroPage() {
             value={dashboard.setorMaisCustoso}
             hint={
               dashboard.custoPorSetor[0]
-                ? formatBRL(dashboard.custoPorSetor[0].custo)
+                ? formatBRLCompact(dashboard.custoPorSetor[0].custo)
                 : "-"
             }
           />
@@ -231,7 +231,7 @@ export default function DashboardFinanceiroPage() {
             value={dashboard.cargoMaisCustoso}
             hint={
               dashboard.custoPorCargo[0]
-                ? formatBRL(dashboard.custoPorCargo[0].custo)
+                ? formatBRLCompact(dashboard.custoPorCargo[0].custo)
                 : "-"
             }
           />

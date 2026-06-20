@@ -32,8 +32,12 @@ export function EmpresaSelector({
         )}
       >
         <Building2 className="h-4 w-4 text-muted-foreground" />
-        <span className="text-muted-foreground text-xs">Empresa:</span>
-        <span className="font-semibold">{empresa.nome}</span>
+        <span className="hidden text-muted-foreground text-xs xl:inline">
+          Empresa:
+        </span>
+        <span className="truncate font-semibold max-w-[160px]">
+          {empresa.nome}
+        </span>
         <ChevronDown className="h-3 w-3 text-muted-foreground" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-64">
