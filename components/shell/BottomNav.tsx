@@ -35,14 +35,16 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex min-h-14 flex-1 flex-col items-center justify-center gap-1 text-xs font-medium transition-colors",
+                "flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[10px] font-medium leading-tight transition-colors",
                 active
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <Icon className="h-5 w-5" />
-              <span>{item.label.split(" ")[0]}</span>
+              <Icon className="h-5 w-5 shrink-0" />
+              <span className="w-full truncate text-center">
+                {item.shortLabel ?? item.label}
+              </span>
             </Link>
           );
         })}

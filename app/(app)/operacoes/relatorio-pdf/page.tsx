@@ -133,7 +133,7 @@ export default function RelatorioPdfPage() {
               </p>
             </div>
 
-            <div className="grid gap-2 sm:grid-cols-2">
+            <div className="grid grid-cols-2 gap-2">
               {sections.map((s) => {
                 const Icon = s.icon;
                 return (

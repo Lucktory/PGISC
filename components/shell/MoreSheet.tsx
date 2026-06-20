@@ -32,12 +32,12 @@ export function MoreSheetTrigger({
       onClick={onClick}
       aria-pressed={open}
       className={cn(
-        "flex h-full min-h-14 flex-1 flex-col items-center justify-center gap-1 text-xs font-medium transition-colors",
+        "flex h-full min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[10px] font-medium leading-tight transition-colors",
         open ? "text-foreground" : "text-muted-foreground hover:text-foreground"
       )}
     >
-      <MoreHorizontal className="h-5 w-5" />
-      <span>Mais</span>
+      <MoreHorizontal className="h-5 w-5 shrink-0" />
+      <span className="w-full truncate text-center">Mais</span>
     </button>
   );
 }

@@ -20,7 +20,9 @@ export function DemoBanner({ className, message = DEFAULT_MESSAGE }: DemoBannerP
       role="note"
     >
       <Info className="mt-0.5 h-4 w-4 shrink-0 lg:mt-0" />
-      <span className="leading-relaxed">{message}</span>
+      <span className="line-clamp-3 leading-relaxed sm:line-clamp-2 lg:line-clamp-none">
+        {message}
+      </span>
     </div>
   );
 }

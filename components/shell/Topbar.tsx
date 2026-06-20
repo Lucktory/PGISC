@@ -43,7 +43,7 @@ export function Topbar({
             {title}
           </span>
           {subtitle && (
-            <span className="truncate text-[11px] text-muted-foreground leading-tight">
+            <span className="hidden truncate text-[11px] text-muted-foreground leading-tight sm:inline">
               {subtitle}
             </span>
           )}

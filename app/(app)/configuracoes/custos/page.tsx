@@ -109,34 +109,38 @@ export default function CustosPage() {
           {entries.map(([cargo, valor]) => (
             <li
               key={cargo}
-              className="flex items-center gap-3 border-b border-border px-4 py-2 last:border-b-0"
+              className="flex flex-col gap-2 border-b border-border px-4 py-3 last:border-b-0 sm:flex-row sm:items-center sm:gap-3 sm:py-2"
             >
-              <span className="flex-1 text-sm">{cargo}</span>
-              <Input
-                type="number"
-                step="0.01"
-                min={0}
-                value={valor}
-                onChange={(e) => {
-                  const v = Number(e.target.value);
-                  if (Number.isFinite(v) && v >= 0) {
-                    setCustoCargo(cargo, v);
-                  }
-                }}
-                className="w-28 text-right"
-              />
-              <span className="w-24 text-right text-xs text-muted-foreground">
-                {formatBRL(valor)}/h
+              <span className="min-w-0 flex-1 truncate text-sm font-medium">
+                {cargo}
               </span>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => removeCustoCargo(cargo)}
-                aria-label={`Remover ${cargo}`}
-              >
-                <Trash2 className="h-4 w-4 text-danger" />
-              </Button>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Input
+                  type="number"
+                  step="0.01"
+                  min={0}
+                  value={valor}
+                  onChange={(e) => {
+                    const v = Number(e.target.value);
+                    if (Number.isFinite(v) && v >= 0) {
+                      setCustoCargo(cargo, v);
+                    }
+                  }}
+                  className="w-28 text-right"
+                />
+                <span className="hidden w-24 text-right text-xs text-muted-foreground sm:inline">
+                  {formatBRL(valor)}/h
+                </span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => removeCustoCargo(cargo)}
+                  aria-label={`Remover ${cargo}`}
+                >
+                  <Trash2 className="h-4 w-4 text-danger" />
+                </Button>
+              </div>
             </li>
           ))}
         </ul>

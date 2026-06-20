@@ -302,7 +302,7 @@ export default function ImportarPage() {
                 Pre-visualizacao do que sera importado e possiveis problemas a revisar.
               </p>
             </div>
-            <div className="grid gap-2 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               <Card className="p-3">
                 <div className="text-xs text-muted-foreground">Linhas</div>
                 <div className="text-xl font-bold">{report.totalRows}</div>

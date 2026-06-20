@@ -33,14 +33,14 @@ export function HeatmapSetorMes({ data }: HeatmapSetorMesProps) {
 
   return (
     <div className="h-full w-full overflow-x-auto">
-      <table className="w-full min-w-[420px] border-separate border-spacing-1 text-xs">
+      <table className="w-full border-separate border-spacing-1 text-xs">
         <thead>
           <tr>
-            <th className="text-left text-[11px] font-medium text-muted-foreground"></th>
+            <th className="w-[42%] text-left text-[10px] font-medium text-muted-foreground sm:w-auto sm:text-[11px]"></th>
             {periodos.map((p) => (
               <th
                 key={p}
-                className="px-2 text-center text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"
+                className="px-1 text-center text-[10px] font-semibold uppercase tracking-wider text-muted-foreground sm:px-2 sm:text-[11px]"
               >
                 {p}
               </th>
@@ -50,7 +50,7 @@ export function HeatmapSetorMes({ data }: HeatmapSetorMesProps) {
         <tbody>
           {setores.map((setor) => (
             <tr key={setor}>
-              <td className="pr-2 text-left text-[11px] font-medium text-muted-foreground">
+              <td className="max-w-0 truncate pr-1 text-left text-[10px] font-medium text-muted-foreground sm:pr-2 sm:text-[11px]">
                 {setor}
               </td>
               {periodos.map((p) => {
@@ -62,7 +62,7 @@ export function HeatmapSetorMes({ data }: HeatmapSetorMesProps) {
                   <td
                     key={p}
                     className={cn(
-                      "h-9 rounded-md text-center text-[11px] font-semibold",
+                      "h-8 rounded-md text-center text-[10px] font-semibold sm:h-9 sm:text-[11px]",
                       intensity(count)
                     )}
                     title={`${setor} - ${p}: ${count} casos`}

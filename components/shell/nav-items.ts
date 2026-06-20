@@ -14,16 +14,18 @@ import {
 export interface NavItem {
   href: string;
   label: string;
+  /** Compact label used in the mobile BottomNav (max ~10 chars). */
+  shortLabel?: string;
   icon: LucideIcon;
   group: "dashboards" | "operacoes" | "configuracoes";
 }
 
 export const dashboardNavItems: NavItem[] = [
-  { href: "/dashboards/executivo", label: "Executivo", icon: LayoutDashboard, group: "dashboards" },
-  { href: "/dashboards/epidemiologico", label: "Epidemiologico", icon: Microscope, group: "dashboards" },
-  { href: "/dashboards/absenteismo", label: "Absenteismo", icon: CalendarMinus, group: "dashboards" },
-  { href: "/dashboards/saude-mental", label: "Saude Mental", icon: Brain, group: "dashboards" },
-  { href: "/dashboards/financeiro", label: "Financeiro", icon: CircleDollarSign, group: "dashboards" },
+  { href: "/dashboards/executivo", label: "Executivo", shortLabel: "Executivo", icon: LayoutDashboard, group: "dashboards" },
+  { href: "/dashboards/epidemiologico", label: "Epidemiologico", shortLabel: "Epidemio", icon: Microscope, group: "dashboards" },
+  { href: "/dashboards/absenteismo", label: "Absenteismo", shortLabel: "Absent.", icon: CalendarMinus, group: "dashboards" },
+  { href: "/dashboards/saude-mental", label: "Saude Mental", shortLabel: "Mental", icon: Brain, group: "dashboards" },
+  { href: "/dashboards/financeiro", label: "Financeiro", shortLabel: "Financ.", icon: CircleDollarSign, group: "dashboards" },
 ];
 
 export const operacoesNavItems: NavItem[] = [
