@@ -66,8 +66,14 @@ function readVar(name: string): string {
 
 function hsl(name: string, alpha = 1): string {
   const raw = readVar(name);
-  if (!raw) return `hsla(0,0%,50%,${alpha})`;
-  return `hsla(${raw}, ${alpha})`;
+  if (!raw) return `hsla(0, 0%, 50%, ${alpha})`;
+  // CSS variables are stored space-separated ("222 47% 11%"), but we need
+  // legacy comma-separated form for the hsla() function so Highcharts and
+  // SVG parsers accept it. "hsla(222 47% 11%, 1)" mixes space and comma
+  // syntax and is invalid CSS - browsers fall back to a default color,
+  // which is why chart text was rendering nearly invisible.
+  const parts = raw.split(/\s+/).filter(Boolean);
+  return `hsla(${parts.join(", ")}, ${alpha})`;
 }
 
 // Monochromatic-leaning premium palette (Linear / Vercel / Stripe aesthetic).
