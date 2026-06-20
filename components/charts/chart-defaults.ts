@@ -70,27 +70,29 @@ function hsl(name: string, alpha = 1): string {
   return `hsla(${raw}, ${alpha})`;
 }
 
-// Direct premium palette (independent of theme tokens so charts feel cohesive across modes)
+// Monochromatic-leaning premium palette (Linear / Vercel / Stripe aesthetic).
+// One brand accent (teal), one cool complement (sky), and a slate neutral ramp.
+// Warm colors only enter via the semantic tokens (--warning, --danger), never here.
 const PALETTE_LIGHT = [
-  "#14b8a6", // teal-500   - main brand-aligned
-  "#0ea5e9", // sky-500    - secondary
-  "#6366f1", // indigo-500 - tertiary, premium accent
-  "#10b981", // emerald-500 - growth / positive
-  "#f59e0b", // amber-500  - emphasis / warning context
-  "#f43f5e", // rose-500   - danger context
-  "#a855f7", // purple-500 - extra series
-  "#06b6d4", // cyan-500   - extra series
+  "#0d9488", // teal-600   - brand primary
+  "#0284c7", // sky-600    - cool secondary
+  "#334155", // slate-700  - neutral deep
+  "#5eead4", // teal-300   - light brand
+  "#64748b", // slate-500  - neutral mid
+  "#7dd3fc", // sky-300    - light secondary
+  "#cbd5e1", // slate-300  - neutral light
+  "#1e293b", // slate-800  - emphasis / max highlight
 ];
 
 const PALETTE_DARK = [
-  "#2dd4bf", // teal-400 (brighter for dark mode)
+  "#14b8a6", // teal-500
   "#38bdf8", // sky-400
-  "#818cf8", // indigo-400
-  "#34d399", // emerald-400
-  "#fbbf24", // amber-400
-  "#fb7185", // rose-400
-  "#c084fc", // purple-400
-  "#22d3ee", // cyan-400
+  "#cbd5e1", // slate-300
+  "#5eead4", // teal-300
+  "#94a3b8", // slate-400
+  "#7dd3fc", // sky-300
+  "#64748b", // slate-500
+  "#f1f5f9", // slate-100 (emphasis)
 ];
 
 function softVariants(palette: string[]): string[] {
@@ -172,16 +174,19 @@ export function areaFillGradient(
 // Premium animation defaults - staggered entrance + smooth state transitions.
 // Each chart spreads its `palette[i]` across datasets/segments and the
 // dataIndex-based delay gives the "wave" effect on load.
+// Premium animation defaults - shorter, snappier than the previous attempt.
+// Staggered entrance + smooth state transitions, but with measured timing
+// that reads as "intentional" rather than "playful".
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function premiumAnimation<T extends ChartType = ChartType>(): any {
   return {
-    duration: 850,
-    easing: "easeOutQuart",
+    duration: 620,
+    easing: "easeOutCubic",
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delay: (context: any) => {
       if (context?.type !== "data") return 0;
-      // stagger bars / arcs / points by 45ms per element
-      return Math.min(45 * (context.dataIndex ?? 0), 600);
+      // 25ms per element max 320ms total - tighter than before
+      return Math.min(25 * (context.dataIndex ?? 0), 320);
     },
   };
 }
@@ -189,7 +194,7 @@ export function premiumAnimation<T extends ChartType = ChartType>(): any {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function premiumTransitions<T extends ChartType = ChartType>(): any {
   return {
-    active: { animation: { duration: 320, easing: "easeOutQuart" } },
-    resize: { animation: { duration: 250 } },
+    active: { animation: { duration: 220, easing: "easeOutCubic" } },
+    resize: { animation: { duration: 200 } },
   };
 }

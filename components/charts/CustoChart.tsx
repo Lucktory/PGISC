@@ -7,7 +7,6 @@ import { useTheme } from "next-themes";
 import { formatBRLCompact } from "@/lib/format/currency";
 import {
   getChartTheme,
-  horizontalBarGradient,
   premiumAnimation,
   premiumTransitions,
   registerChartDefaults,
@@ -36,11 +35,8 @@ export function CustoChart({
   const mobile = typeof window !== "undefined" && window.innerWidth < 768;
   const shortLabels = labels.map((l) => (mobile ? truncate(l, 12) : l));
 
-  // Custo: amber-led gradient (money / value). Variant toggles between two combos.
-  const gradientStart = variant === "accent" ? theme.palette[4] : theme.palette[2]; // amber or indigo
-  const gradientEnd = variant === "accent" ? theme.palette[5] : theme.palette[4]; // rose or amber
-  const hoverStart = variant === "accent" ? theme.palette[2] : theme.palette[5];
-  const hoverEnd = variant === "accent" ? theme.palette[5] : theme.palette[4];
+  // Setor view = teal (brand). Cargo view = sky (differentiates while staying cool).
+  const color = variant === "accent" ? theme.palette[1] : theme.palette[0];
 
   return (
     <Bar
@@ -50,23 +46,11 @@ export function CustoChart({
           {
             label: "Custo",
             data: values,
-            backgroundColor: (ctx) =>
-              horizontalBarGradient(
-                ctx.chart.ctx,
-                ctx.chart.chartArea,
-                gradientStart,
-                gradientEnd
-              ),
-            hoverBackgroundColor: (ctx) =>
-              horizontalBarGradient(
-                ctx.chart.ctx,
-                ctx.chart.chartArea,
-                hoverStart,
-                hoverEnd
-              ),
-            borderRadius: 6,
+            backgroundColor: color,
+            hoverBackgroundColor: theme.palette[7],
+            borderRadius: 4,
             borderSkipped: false,
-            barThickness: 18,
+            barThickness: 14,
           },
         ],
       }}
@@ -81,6 +65,7 @@ export function CustoChart({
           tooltip: {
             padding: 10,
             cornerRadius: 6,
+            displayColors: false,
             callbacks: {
               label: (ctx) => ` ${formatBRLCompact(Number(ctx.parsed.x ?? 0))}`,
             },

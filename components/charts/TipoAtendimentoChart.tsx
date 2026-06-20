@@ -22,6 +22,7 @@ export function TipoAtendimentoChart({ data }: TipoAtendimentoChartProps) {
   const { resolvedTheme } = useTheme();
   const theme = React.useMemo(() => getChartTheme(), [resolvedTheme]);
 
+  // Monochromatic teal scale - premium, brand-aligned, no chromatic noise.
   return (
     <Doughnut
       data={{
@@ -30,25 +31,25 @@ export function TipoAtendimentoChart({ data }: TipoAtendimentoChartProps) {
           {
             data: [data.Passivo, data.Ativo, data.Suspensao],
             backgroundColor: [
-              theme.palette[0], // teal-500
-              theme.palette[1], // sky-500
-              theme.muted, // slate muted for Suspensao
+              theme.palette[0], // teal-600 - dominant
+              theme.palette[3], // teal-300 - lighter shade
+              theme.palette[6], // slate-300 - muted
             ],
             hoverBackgroundColor: [
-              theme.palette[2], // indigo-500
-              theme.palette[3], // emerald-500
-              theme.textMuted,
+              theme.palette[7], // slate-800 emphasis
+              theme.palette[0],
+              theme.palette[4],
             ],
-            borderWidth: 3,
+            borderWidth: 2,
             borderColor: theme.cardBg,
-            spacing: 2,
+            spacing: 1,
           },
         ],
       }}
       options={{
         maintainAspectRatio: false,
         responsive: true,
-        cutout: "66%",
+        cutout: "70%",
         animation: premiumAnimation<"doughnut">(),
         transitions: premiumTransitions<"doughnut">(),
         plugins: {
@@ -56,9 +57,9 @@ export function TipoAtendimentoChart({ data }: TipoAtendimentoChartProps) {
             position: "bottom",
             labels: {
               color: theme.textMuted,
-              boxWidth: 10,
-              boxHeight: 10,
-              padding: 12,
+              boxWidth: 8,
+              boxHeight: 8,
+              padding: 14,
               font: { size: 11 },
               usePointStyle: true,
               pointStyle: "circle",
@@ -67,6 +68,7 @@ export function TipoAtendimentoChart({ data }: TipoAtendimentoChartProps) {
           tooltip: {
             padding: 10,
             cornerRadius: 6,
+            displayColors: false,
             callbacks: {
               label: (ctx) => ` ${ctx.label}: ${ctx.parsed} atendimentos`,
             },

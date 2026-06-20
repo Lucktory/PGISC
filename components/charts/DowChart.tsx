@@ -9,7 +9,6 @@ import {
   premiumAnimation,
   premiumTransitions,
   registerChartDefaults,
-  verticalBarGradient,
 } from "./chart-defaults";
 import type { DiaSemana } from "@/lib/data/types";
 
@@ -27,6 +26,9 @@ export function DowChart({ data }: DowChartProps) {
 
   const values = ORDER.map((d) => data[d] ?? 0);
   const max = Math.max(...values);
+  // Peak day gets emphasis (slate-800), others stay muted-teal.
+  const colors = values.map((v) => (v === max ? theme.palette[7] : theme.palette[0]));
+  const hoverColors = values.map(() => theme.palette[7]);
 
   return (
     <Bar
@@ -36,30 +38,11 @@ export function DowChart({ data }: DowChartProps) {
           {
             label: "Atendimentos",
             data: values,
-            backgroundColor: (ctx) => {
-              const top = values[ctx.dataIndex ?? 0] === max
-                ? theme.palette[2] // indigo for the peak day
-                : theme.palette[0]; // teal for the rest
-              const bottom = values[ctx.dataIndex ?? 0] === max
-                ? theme.palette[0]
-                : theme.palette[1]; // sky bottom
-              return verticalBarGradient(
-                ctx.chart.ctx,
-                ctx.chart.chartArea,
-                top,
-                bottom
-              );
-            },
-            hoverBackgroundColor: (ctx) =>
-              verticalBarGradient(
-                ctx.chart.ctx,
-                ctx.chart.chartArea,
-                theme.palette[3], // emerald top on hover
-                theme.palette[1]
-              ),
-            borderRadius: 8,
+            backgroundColor: colors,
+            hoverBackgroundColor: hoverColors,
+            borderRadius: 4,
             borderSkipped: false,
-            barPercentage: 0.65,
+            barPercentage: 0.55,
             categoryPercentage: 0.85,
           },
         ],
@@ -74,6 +57,7 @@ export function DowChart({ data }: DowChartProps) {
           tooltip: {
             padding: 10,
             cornerRadius: 6,
+            displayColors: false,
             callbacks: {
               label: (ctx) => ` ${ctx.parsed.y} atendimentos`,
             },

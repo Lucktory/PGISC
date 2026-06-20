@@ -22,6 +22,7 @@ export function PeriodoChart({ data }: PeriodoChartProps) {
   const { resolvedTheme } = useTheme();
   const theme = React.useMemo(() => getChartTheme(), [resolvedTheme]);
 
+  // Monochromatic cool scale, no warm colors. Manha as dominant, others as steps.
   return (
     <Doughnut
       data={{
@@ -30,25 +31,25 @@ export function PeriodoChart({ data }: PeriodoChartProps) {
           {
             data: [data.Manha, data.Tarde, data.Noite],
             backgroundColor: [
-              theme.palette[4], // amber-500 (sunrise / manha)
-              theme.palette[1], // sky-500 (afternoon)
-              theme.palette[2], // indigo-500 (evening)
+              theme.palette[0], // teal-600 - dominant
+              theme.palette[1], // sky-600 - cool complement
+              theme.palette[6], // slate-300 - muted residual
             ],
             hoverBackgroundColor: [
-              theme.palette[5], // rose-500
-              theme.palette[0], // teal-500
-              theme.palette[6], // purple-500
+              theme.palette[7],
+              theme.palette[0],
+              theme.palette[4],
             ],
-            borderWidth: 3,
+            borderWidth: 2,
             borderColor: theme.cardBg,
-            spacing: 2,
+            spacing: 1,
           },
         ],
       }}
       options={{
         maintainAspectRatio: false,
         responsive: true,
-        cutout: "66%",
+        cutout: "70%",
         animation: premiumAnimation<"doughnut">(),
         transitions: premiumTransitions<"doughnut">(),
         plugins: {
@@ -56,9 +57,9 @@ export function PeriodoChart({ data }: PeriodoChartProps) {
             position: "bottom",
             labels: {
               color: theme.textMuted,
-              boxWidth: 10,
-              boxHeight: 10,
-              padding: 12,
+              boxWidth: 8,
+              boxHeight: 8,
+              padding: 14,
               font: { size: 11 },
               usePointStyle: true,
               pointStyle: "circle",
@@ -67,6 +68,7 @@ export function PeriodoChart({ data }: PeriodoChartProps) {
           tooltip: {
             padding: 10,
             cornerRadius: 6,
+            displayColors: false,
             callbacks: {
               label: (ctx) => ` ${ctx.label}: ${ctx.parsed} atendimentos`,
             },

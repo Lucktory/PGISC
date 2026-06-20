@@ -9,7 +9,6 @@ import {
   premiumAnimation,
   premiumTransitions,
   registerChartDefaults,
-  verticalBarGradient,
 } from "./chart-defaults";
 
 registerChartDefaults();
@@ -37,23 +36,11 @@ export function TempoEmpresaChart({
           {
             label: "Colaboradores",
             data: values,
-            backgroundColor: (ctx) =>
-              verticalBarGradient(
-                ctx.chart.ctx,
-                ctx.chart.chartArea,
-                theme.palette[3], // emerald-500 top
-                theme.palette[0] // teal-500 bottom
-              ),
-            hoverBackgroundColor: (ctx) =>
-              verticalBarGradient(
-                ctx.chart.ctx,
-                ctx.chart.chartArea,
-                theme.palette[1], // sky on hover
-                theme.palette[0]
-              ),
-            borderRadius: 8,
+            backgroundColor: theme.palette[0],
+            hoverBackgroundColor: theme.palette[7],
+            borderRadius: 4,
             borderSkipped: false,
-            barPercentage: 0.65,
+            barPercentage: 0.55,
             categoryPercentage: 0.8,
           },
         ],
@@ -68,6 +55,7 @@ export function TempoEmpresaChart({
           tooltip: {
             padding: 10,
             cornerRadius: 6,
+            displayColors: false,
             callbacks: {
               label: (ctx) => ` ${ctx.parsed.y ?? 0} colaboradores`,
             },

@@ -6,7 +6,6 @@ import { useTheme } from "next-themes";
 
 import {
   getChartTheme,
-  horizontalBarGradient,
   premiumAnimation,
   premiumTransitions,
   registerChartDefaults,
@@ -44,23 +43,11 @@ export function SetorRankingChart({ data, top = 8 }: SetorRankingChartProps) {
           {
             label: "Dias perdidos",
             data: values,
-            backgroundColor: (ctx) =>
-              horizontalBarGradient(
-                ctx.chart.ctx,
-                ctx.chart.chartArea,
-                theme.palette[1], // sky-500 (lighter end)
-                theme.palette[0] // teal-500 (saturated end)
-              ),
-            hoverBackgroundColor: (ctx) =>
-              horizontalBarGradient(
-                ctx.chart.ctx,
-                ctx.chart.chartArea,
-                theme.palette[2], // indigo-500 on hover for delight
-                theme.palette[0]
-              ),
-            borderRadius: 6,
+            backgroundColor: theme.palette[0],
+            hoverBackgroundColor: theme.palette[7], // slate-800 emphasis on hover
+            borderRadius: 4,
             borderSkipped: false,
-            barThickness: 18,
+            barThickness: 14,
           },
         ],
       }}
@@ -73,11 +60,9 @@ export function SetorRankingChart({ data, top = 8 }: SetorRankingChartProps) {
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: theme.text,
-            titleColor: theme.text,
-            bodyColor: theme.text,
             padding: 10,
             cornerRadius: 6,
+            displayColors: false,
             callbacks: {
               label: (ctx) => {
                 const v = ctx.parsed.x ?? 0;

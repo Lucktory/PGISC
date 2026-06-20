@@ -34,20 +34,20 @@ export function FaixaEtariaChart({ data }: FaixaEtariaChartProps) {
           {
             label: "Masculino",
             data: mValues,
-            backgroundColor: theme.palette[1], // sky-500
-            hoverBackgroundColor: theme.palette[2], // indigo on hover
-            borderRadius: 6,
+            backgroundColor: theme.palette[1], // sky-600
+            hoverBackgroundColor: theme.palette[7],
+            borderRadius: 4,
             borderSkipped: false,
-            barThickness: 18,
+            barThickness: 14,
           },
           {
             label: "Feminino",
             data: fValues,
-            backgroundColor: theme.palette[0], // teal-500
-            hoverBackgroundColor: theme.palette[3], // emerald on hover
-            borderRadius: 6,
+            backgroundColor: theme.palette[0], // teal-600
+            hoverBackgroundColor: theme.palette[7],
+            borderRadius: 4,
             borderSkipped: false,
-            barThickness: 18,
+            barThickness: 14,
           },
         ],
       }}
@@ -62,9 +62,9 @@ export function FaixaEtariaChart({ data }: FaixaEtariaChartProps) {
             position: "bottom",
             labels: {
               color: theme.textMuted,
-              boxWidth: 10,
-              boxHeight: 10,
-              padding: 12,
+              boxWidth: 8,
+              boxHeight: 8,
+              padding: 14,
               font: { size: 11 },
               usePointStyle: true,
               pointStyle: "circle",

@@ -6,7 +6,6 @@ import { useTheme } from "next-themes";
 
 import {
   getChartTheme,
-  horizontalBarGradient,
   premiumAnimation,
   premiumTransitions,
   registerChartDefaults,
@@ -33,23 +32,11 @@ export function CategoriaFChart({ data }: CategoriaFChartProps) {
           {
             label: "Casos",
             data: values,
-            backgroundColor: (ctx) =>
-              horizontalBarGradient(
-                ctx.chart.ctx,
-                ctx.chart.chartArea,
-                theme.palette[6], // purple-500
-                theme.palette[2] // indigo-500
-              ),
-            hoverBackgroundColor: (ctx) =>
-              horizontalBarGradient(
-                ctx.chart.ctx,
-                ctx.chart.chartArea,
-                theme.palette[5], // rose
-                theme.palette[2]
-              ),
-            borderRadius: 5,
+            backgroundColor: theme.palette[2], // slate-700 (sober for mental health)
+            hoverBackgroundColor: theme.palette[0], // teal on hover
+            borderRadius: 4,
             borderSkipped: false,
-            barThickness: 14,
+            barThickness: 12,
           },
         ],
       }}
@@ -64,6 +51,7 @@ export function CategoriaFChart({ data }: CategoriaFChartProps) {
           tooltip: {
             padding: 10,
             cornerRadius: 6,
+            displayColors: false,
             callbacks: {
               label: (ctx) => ` ${ctx.parsed.x ?? 0} casos`,
             },

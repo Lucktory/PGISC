@@ -27,11 +27,11 @@ interface EvolucaoLineChartProps {
 }
 
 const COLOR_INDEX: Record<EvolucaoSerie["color"], number> = {
-  primary: 0, // teal
-  accent: 1, // sky
-  success: 3, // emerald
-  warning: 4, // amber
-  danger: 5, // rose
+  primary: 0, // teal-600
+  accent: 1, // sky-600
+  success: 2, // slate-700 (neutral - reserved warm is semantic)
+  warning: 2,
+  danger: 2,
 };
 
 export function EvolucaoLineChart({
@@ -54,14 +54,14 @@ export function EvolucaoLineChart({
             borderColor: c,
             backgroundColor: (ctx) =>
               areaFillGradient(ctx.chart.ctx, ctx.chart.chartArea, c),
-            tension: 0.4,
+            tension: 0.25,
             fill: true,
-            pointRadius: 4,
-            pointHoverRadius: 7,
+            pointRadius: 3,
+            pointHoverRadius: 6,
             pointBackgroundColor: c,
             pointBorderColor: theme.cardBg,
             pointBorderWidth: 2,
-            borderWidth: 2.5,
+            borderWidth: 2,
           };
         }),
       }}
@@ -76,9 +76,9 @@ export function EvolucaoLineChart({
             position: "bottom",
             labels: {
               color: theme.textMuted,
-              boxWidth: 10,
-              boxHeight: 10,
-              padding: 12,
+              boxWidth: 8,
+              boxHeight: 8,
+              padding: 14,
               font: { size: 11 },
               usePointStyle: true,
               pointStyle: "circle",

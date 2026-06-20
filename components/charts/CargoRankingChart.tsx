@@ -6,7 +6,6 @@ import { useTheme } from "next-themes";
 
 import {
   getChartTheme,
-  horizontalBarGradient,
   premiumAnimation,
   premiumTransitions,
   registerChartDefaults,
@@ -44,23 +43,11 @@ export function CargoRankingChart({ data, top = 8 }: CargoRankingChartProps) {
           {
             label: "Dias perdidos",
             data: values,
-            backgroundColor: (ctx) =>
-              horizontalBarGradient(
-                ctx.chart.ctx,
-                ctx.chart.chartArea,
-                theme.palette[3], // emerald-500
-                theme.palette[2] // indigo-500
-              ),
-            hoverBackgroundColor: (ctx) =>
-              horizontalBarGradient(
-                ctx.chart.ctx,
-                ctx.chart.chartArea,
-                theme.palette[7], // cyan-500
-                theme.palette[2]
-              ),
-            borderRadius: 6,
+            backgroundColor: theme.palette[1], // sky-600 (distinct from setor's teal)
+            hoverBackgroundColor: theme.palette[7], // emphasis on hover
+            borderRadius: 4,
             borderSkipped: false,
-            barThickness: 16,
+            barThickness: 14,
           },
         ],
       }}
@@ -75,6 +62,7 @@ export function CargoRankingChart({ data, top = 8 }: CargoRankingChartProps) {
           tooltip: {
             padding: 10,
             cornerRadius: 6,
+            displayColors: false,
             callbacks: {
               label: (ctx) => {
                 const v = ctx.parsed.x ?? 0;
