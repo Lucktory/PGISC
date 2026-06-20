@@ -11,8 +11,11 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="flex min-h-screen w-full bg-background text-foreground">
       <Sidebar />
-      <div className="flex min-h-screen flex-1 flex-col">
-        <div className="flex-1">{children}</div>
+      {/* min-w-0 lets this flex-1 column shrink below its min-content size, so
+          any wide child (chart canvas, wide table) cannot push the layout past
+          the viewport. overflow-x-hidden is a safety net for the same reason. */}
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
+        <div className="min-w-0 flex-1 overflow-x-hidden">{children}</div>
         <BottomNav />
       </div>
     </div>

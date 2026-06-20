@@ -38,16 +38,20 @@ export function ChartCard({
   footer,
 }: ChartCardProps) {
   return (
-    <Card className={cn("flex flex-col p-4 lg:p-5", className)}>
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-2">
+    <Card className={cn("flex min-w-0 flex-col p-4 lg:p-5", className)}>
+      <div className="flex min-w-0 items-start justify-between gap-3">
+        <div className="flex min-w-0 items-start gap-2">
           {Icon && (
             <Icon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
           )}
-          <div className="flex flex-col">
-            <h3 className="text-sm font-semibold leading-tight">{title}</h3>
+          <div className="flex min-w-0 flex-col">
+            <h3 className="truncate text-sm font-semibold leading-tight">
+              {title}
+            </h3>
             {subtitle && (
-              <p className="text-xs text-muted-foreground">{subtitle}</p>
+              <p className="truncate text-xs text-muted-foreground">
+                {subtitle}
+              </p>
             )}
           </div>
         </div>
@@ -61,7 +65,14 @@ export function ChartCard({
           </Link>
         )}
       </div>
-      <div className={cn("relative mt-4 w-full", heights[height])}>
+      {/* min-w-0 + overflow-hidden so Chart.js canvas cannot push card wider
+          than its grid cell allows */}
+      <div
+        className={cn(
+          "relative mt-4 min-w-0 w-full overflow-hidden",
+          heights[height]
+        )}
+      >
         {children}
       </div>
       {footer && (
