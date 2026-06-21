@@ -175,25 +175,26 @@ export function HighchartsDonut({
       },
       plotOptions: {
         pie: {
-          // Cap the pie diameter so labels always have room. Without this
-          // Highcharts can size the pie at the smallest dimension of the
-          // plot area and labels overflow.
-          size: "82%",
           allowPointSelect: true,
           borderWidth: 2,
           borderColor: theme.cardBg,
           cursor: "pointer",
+          // Let Highcharts pick the pie size automatically. It will shrink
+          // the pie radius until the labels fit inside the plot area, which
+          // is exactly what we want for the constrained ChartCard heights.
           dataLabels: {
             enabled: showDataLabels,
-            format: "<b>{point.name}</b><br>{point.percentage:.1f}%",
-            distance: 8,
-            // Render labels even if their bounding box extends slightly
-            // outside the plot area. Without this the label is silently
-            // dropped (or the whole pie shrunk further to compensate).
-            crop: false,
-            overflow: "allow",
+            // Single-line format takes half the vertical room of the
+            // previous two-line "<b>Name</b><br>X%" - the two-line version
+            // forced Highcharts to either oversize the chart or clip the
+            // bottom slice + label.
+            format: "<b>{point.name}</b> {point.percentage:.1f}%",
+            distance: 10,
             connectorWidth: 1,
             connectorColor: theme.grid,
+            // Default crop:true + overflow:"justify" - this is what tells
+            // Highcharts to shrink the pie automatically until labels fit.
+            // Overriding these to allow overflow caused the clipping.
             style: {
               color: theme.text,
               fontSize: "11px",
@@ -220,9 +221,8 @@ export function HighchartsDonut({
             chartOptions: {
               plotOptions: {
                 pie: {
-                  size: "78%",
                   dataLabels: {
-                    distance: 4,
+                    distance: 6,
                     format: "{point.percentage:.1f}%",
                     style: { fontSize: "10px" },
                   },
