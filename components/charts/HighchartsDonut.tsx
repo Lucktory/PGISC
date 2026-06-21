@@ -149,11 +149,12 @@ export function HighchartsDonut({
       chart: {
         type: "pie",
         backgroundColor: "transparent",
-        // Default Highcharts spacing [10, 10, 15, 10] reserves room for the
-        // outside dataLabels. The previous override [4, 4, 4, 4] was too
-        // tight - Highcharts oversized the pie because it thought it had
-        // more vertical room than it really did, so the bottom slice + label
-        // fell below the chart container and were clipped.
+        // Explicit spacing reserves room for outside dataLabels and rounded
+        // corners so Highcharts' plot-area math is predictable.
+        spacingTop: 18,
+        spacingRight: 12,
+        spacingBottom: 18,
+        spacingLeft: 12,
         style: {
           fontFamily:
             "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -175,26 +176,26 @@ export function HighchartsDonut({
       },
       plotOptions: {
         pie: {
+          // Explicit pie diameter as a percentage of the plot area's smallest
+          // dimension. With the chart card capped at h-60 (240px), the plot
+          // area is ~204px tall after our spacing. 65% gives a 132px diameter
+          // pie, leaving ~36px each side for labels + connectors. This is
+          // conservative on purpose: Highcharts' auto-shrink wasn't engaging
+          // reliably because the chart.update from inside the fan animation
+          // mutates innerSize after the initial label-fit calculation, so
+          // the auto-calculated radius ended up too large.
+          size: "65%",
+          center: ["50%", "50%"],
           allowPointSelect: true,
           borderWidth: 2,
           borderColor: theme.cardBg,
           cursor: "pointer",
-          // Let Highcharts pick the pie size automatically. It will shrink
-          // the pie radius until the labels fit inside the plot area, which
-          // is exactly what we want for the constrained ChartCard heights.
           dataLabels: {
             enabled: showDataLabels,
-            // Single-line format takes half the vertical room of the
-            // previous two-line "<b>Name</b><br>X%" - the two-line version
-            // forced Highcharts to either oversize the chart or clip the
-            // bottom slice + label.
             format: "<b>{point.name}</b> {point.percentage:.1f}%",
-            distance: 10,
+            distance: 8,
             connectorWidth: 1,
             connectorColor: theme.grid,
-            // Default crop:true + overflow:"justify" - this is what tells
-            // Highcharts to shrink the pie automatically until labels fit.
-            // Overriding these to allow overflow caused the clipping.
             style: {
               color: theme.text,
               fontSize: "11px",
