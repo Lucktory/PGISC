@@ -149,12 +149,13 @@ export function HighchartsDonut({
       chart: {
         type: "pie",
         backgroundColor: "transparent",
-        // Explicit spacing reserves room for outside dataLabels and rounded
-        // corners so Highcharts' plot-area math is predictable.
-        spacingTop: 18,
-        spacingRight: 12,
-        spacingBottom: 18,
-        spacingLeft: 12,
+        // Tight outer spacing - the bottom legend lives outside the pie's
+        // plot area, so we don't need to reserve top/bottom room for
+        // outside dataLabels anymore.
+        spacingTop: 6,
+        spacingRight: 8,
+        spacingBottom: 6,
+        spacingLeft: 8,
         style: {
           fontFamily:
             "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -174,33 +175,58 @@ export function HighchartsDonut({
         borderRadius: 6,
         style: { color: theme.text, fontSize: "12px" },
       },
+      // Bottom legend carries the category names. dataLabels inside the
+      // slices are just the percentage. Standard pattern for compact donuts
+      // (Vercel / Stripe / Linear / Mixpanel ship this exact layout).
+      legend: {
+        enabled: true,
+        layout: "horizontal",
+        align: "center",
+        verticalAlign: "bottom",
+        symbolRadius: 6,
+        symbolHeight: 9,
+        symbolPadding: 6,
+        itemDistance: 14,
+        margin: 6,
+        padding: 0,
+        itemStyle: {
+          color: theme.text,
+          fontSize: "11px",
+          fontWeight: "500",
+        },
+        itemHoverStyle: { color: theme.accent },
+      },
       plotOptions: {
         pie: {
-          // Explicit pie diameter as a percentage of the plot area's smallest
-          // dimension. With the chart card capped at h-60 (240px), the plot
-          // area is ~204px tall after our spacing. 65% gives a 132px diameter
-          // pie, leaving ~36px each side for labels + connectors. This is
-          // conservative on purpose: Highcharts' auto-shrink wasn't engaging
-          // reliably because the chart.update from inside the fan animation
-          // mutates innerSize after the initial label-fit calculation, so
-          // the auto-calculated radius ended up too large.
-          size: "65%",
-          center: ["50%", "50%"],
+          // No outside dataLabels means the pie can be much larger - only
+          // the bottom legend (~26 px) is reserved space. Center shifted
+          // up slightly to visually balance the legend.
+          size: "92%",
+          center: ["50%", "46%"],
           allowPointSelect: true,
+          showInLegend: true,
           borderWidth: 2,
           borderColor: theme.cardBg,
           cursor: "pointer",
           dataLabels: {
             enabled: showDataLabels,
-            format: "<b>{point.name}</b> {point.percentage:.1f}%",
-            distance: 8,
-            connectorWidth: 1,
-            connectorColor: theme.grid,
+            // distance: negative means INSIDE the slice. Percentage in
+            // white on the slice color, with a soft outline so it stays
+            // readable on any palette color. Slices smaller than 6% have
+            // their label hidden (no room) - the name and percentage are
+            // still in the legend and tooltip.
+            distance: -22,
+            format: "{point.percentage:.1f}%",
+            filter: {
+              property: "percentage",
+              operator: ">",
+              value: 6,
+            },
             style: {
-              color: theme.text,
-              fontSize: "11px",
-              fontWeight: "500",
-              textOutline: "none",
+              color: "#ffffff",
+              fontSize: "12px",
+              fontWeight: "700",
+              textOutline: "2px rgba(0, 0, 0, 0.35)",
             },
           },
         },
@@ -222,12 +248,16 @@ export function HighchartsDonut({
             chartOptions: {
               plotOptions: {
                 pie: {
+                  size: "88%",
                   dataLabels: {
-                    distance: 6,
-                    format: "{point.percentage:.1f}%",
+                    distance: -18,
                     style: { fontSize: "10px" },
                   },
                 },
+              },
+              legend: {
+                itemStyle: { fontSize: "10px" },
+                itemDistance: 10,
               },
             },
           },
