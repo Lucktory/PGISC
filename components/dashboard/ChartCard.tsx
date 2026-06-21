@@ -65,11 +65,12 @@ export function ChartCard({
           </Link>
         )}
       </div>
-      {/* min-w-0 + overflow-hidden so Chart.js canvas cannot push card wider
-          than its grid cell allows */}
+      {/* min-w-0 is enough to keep wide canvases from pushing the card.
+          overflow-hidden was clipping Highcharts dataLabels rendered just
+          outside the pie, so it's been removed. */}
       <div
         className={cn(
-          "relative mt-4 min-w-0 w-full overflow-hidden",
+          "relative mt-4 min-w-0 w-full",
           heights[height]
         )}
       >

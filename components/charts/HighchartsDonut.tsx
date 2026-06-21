@@ -149,7 +149,11 @@ export function HighchartsDonut({
       chart: {
         type: "pie",
         backgroundColor: "transparent",
-        spacing: [4, 4, 4, 4],
+        // Default Highcharts spacing [10, 10, 15, 10] reserves room for the
+        // outside dataLabels. The previous override [4, 4, 4, 4] was too
+        // tight - Highcharts oversized the pie because it thought it had
+        // more vertical room than it really did, so the bottom slice + label
+        // fell below the chart container and were clipped.
         style: {
           fontFamily:
             "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -171,6 +175,10 @@ export function HighchartsDonut({
       },
       plotOptions: {
         pie: {
+          // Cap the pie diameter so labels always have room. Without this
+          // Highcharts can size the pie at the smallest dimension of the
+          // plot area and labels overflow.
+          size: "82%",
           allowPointSelect: true,
           borderWidth: 2,
           borderColor: theme.cardBg,
@@ -178,7 +186,12 @@ export function HighchartsDonut({
           dataLabels: {
             enabled: showDataLabels,
             format: "<b>{point.name}</b><br>{point.percentage:.1f}%",
-            distance: 14,
+            distance: 8,
+            // Render labels even if their bounding box extends slightly
+            // outside the plot area. Without this the label is silently
+            // dropped (or the whole pie shrunk further to compensate).
+            crop: false,
+            overflow: "allow",
             connectorWidth: 1,
             connectorColor: theme.grid,
             style: {
@@ -207,8 +220,9 @@ export function HighchartsDonut({
             chartOptions: {
               plotOptions: {
                 pie: {
+                  size: "78%",
                   dataLabels: {
-                    distance: 6,
+                    distance: 4,
                     format: "{point.percentage:.1f}%",
                     style: { fontSize: "10px" },
                   },
