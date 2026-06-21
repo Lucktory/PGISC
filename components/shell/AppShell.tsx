@@ -12,10 +12,13 @@ export function AppShell({ children }: AppShellProps) {
     <div className="flex min-h-screen w-full bg-background text-foreground">
       <Sidebar />
       {/* min-w-0 lets this flex-1 column shrink below its min-content size, so
-          any wide child (chart canvas, wide table) cannot push the layout past
-          the viewport. overflow-x-hidden is a safety net for the same reason. */}
+          any wide child cannot push the layout past the viewport.
+          NOTE: overflow-x-hidden was removed because it created a scroll
+          context that broke `position: sticky` on the Topbar. The horizontal
+          overflow guard now relies on min-w-0 plus per-component clipping
+          (ChartCard overflow-hidden, DataTable overflow-x-auto, etc.). */}
       <div className="flex min-h-screen min-w-0 flex-1 flex-col">
-        <div className="min-w-0 flex-1 overflow-x-hidden">{children}</div>
+        <div className="min-w-0 flex-1">{children}</div>
         <BottomNav />
       </div>
     </div>

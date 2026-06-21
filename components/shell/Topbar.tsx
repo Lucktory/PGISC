@@ -35,7 +35,16 @@ export function Topbar({
   const [filtrosOpen, setFiltrosOpen] = React.useState(false);
 
   return (
-    <div className={cn("border-b border-border bg-background", className)}>
+    <div
+      className={cn(
+        // Sticky to the viewport top so the title, selectors and avatar stay
+        // visible while the user scrolls. backdrop-blur over a translucent
+        // background gives the bar a premium "depth on scroll" feel, similar
+        // to Vercel / Linear / Stripe dashboards.
+        "sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur-md supports-[backdrop-filter]:bg-background/75",
+        className
+      )}
+    >
       {/* Mobile bar (compact) */}
       <div className="flex h-14 items-center justify-between gap-2 px-4 lg:hidden">
         <div className="flex min-w-0 flex-col">

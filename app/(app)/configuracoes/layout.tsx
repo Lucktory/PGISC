@@ -39,7 +39,7 @@ export default function ConfiguracoesLayout({
         subtitle="Template, empresas, usuarios, regras de negocio e mais"
         showFilters={false}
       />
-      <nav className="border-b border-border bg-background lg:sticky lg:top-0 lg:z-10">
+      <nav className="border-b border-border bg-background">
         <div className="-mx-1 flex snap-x snap-mandatory gap-1 overflow-x-auto px-4 py-2 lg:px-8">
           {TABS.map((t) => {
             const active = pathname === t.href;
