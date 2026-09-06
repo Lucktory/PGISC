@@ -12,6 +12,7 @@ const inter = Inter({
   display: "swap",
 });
 
+
 export const metadata: Metadata = {
   title: "PGISC - Plataforma de Gestao e Inteligencia em Saude Corporativa",
   description:
